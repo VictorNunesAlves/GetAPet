@@ -1,6 +1,13 @@
 const User = require ('../models/User')
+
 const bcrypt = require ('bcrypt')
+
+const jwt = require ('jsonwebtoken')
+
 const createUserToken = require('../helpers/create-user-token')
+const getToken = require('../helpers/get-token')
+const getUserByToken = require('../helpers/get-user-by-token')
+
 
 module.exports = class UserController{
     
@@ -82,6 +89,84 @@ module.exports = class UserController{
         }
 
         createUserToken(user, req, res)
+    }
+
+    static async checkUser(req, res){
+        let currentUser
+
+        if(req.headers.authorization){
+            const token = await getToken(req)
+            console.log('token: '+ token)
+
+            const decod = jwt.verify(token, 'asiefn8704g0374g7qb4g')
+            console.log('decod: '+decod)
+
+            currentUser = await User.findById(decod.id)
+            currentUser.password = undefined
+            console.log('currentUser: '+ currentUser)
+
+        }else{
+            currentUser = null
+        }
+
+        res.status(200).json({currentUser: currentUser})
+
+    }
+
+    static async getUserById  (req, res){
+        const userId = req.params.id
+
+        const user =  await User.findById(userId).select("-password")
+
+        if(!User){
+            res.status(422).json({message: "Usuário não encontrado"})
+            return
+        }
+        res.status(200).json({message: 'Usuário encontrado', user})
+    }
+
+    static async editUser(req, res){
+        const token = await getToken(req)
+        const user = await getUserByToken(token)
+        console.log('user: ', user)
+        const { name, email, phone, password, confirmPassword } = req.body
+        let image = ''
+
+        user.name = name
+        user.phone = phone
+        if(email != undefined){
+            const emailExists = await User.findOne({email: email})
+            console.log('emailExist: ', emailExists)
+
+
+            if(user.email != email && emailExists){
+                return res.status(422).json({message: 'Por favor, utilize outro email'})
+            }
+            user.email = email
+        }
+
+        if(password && !confirmPassword){
+            res.status(422).json({message: 'A confirmação de senha é obrigatória'})
+            return
+        }
+        else if(password !== confirmPassword){
+            res.status(422).json({message: 'As senhas não conferem'})
+            return
+
+        }else if (password === confirmPassword && password != null){
+            const salt = await bcrypt.genSalt(12)
+            const passHash =  await bcrypt.hash(password, salt)
+            user.password = passHash
+        }
+
+        await User.findOneAndUpdate(
+            {_id : user.id},
+            {$set: user},
+            {new: true}
+        )
+        
+        res.status(200).json({message:"Usuário atualizado com sucesso"})
+
     }
 
 
