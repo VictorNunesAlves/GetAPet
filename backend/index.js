@@ -1,8 +1,6 @@
 const express = require('express')
 const cors = require('cors')
-require('./db/conn') // 👈 ISSO AQUI
-
-const UserRoutes = require('./routes/UserRoutes')
+require('./db/conn')
 
 const app = express()
 
@@ -16,7 +14,11 @@ app.use(cors({
 
 app.use(express.static('public'))   
 
+const UserRoutes = require('./routes/UserRoutes')
+const PetsRoutes = require('./routes/PetRoutes')
+
 app.use('/users', UserRoutes)
+app.use('/pets', PetsRoutes)
 
 app.listen(5000, () => {
     console.log('Servidor rodando em http://localhost:5000')

@@ -30,4 +30,4 @@ const Pet = mongoose.model(
     )
 )
 
-module.exports = `Pet`
+module.exports = Pet

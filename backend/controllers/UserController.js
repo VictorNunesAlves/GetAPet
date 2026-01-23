@@ -128,9 +128,14 @@ module.exports = class UserController{
     static async editUser(req, res){
         const token = await getToken(req)
         const user = await getUserByToken(token)
+        
         console.log('user: ', user)
         const { name, email, phone, password, confirmPassword } = req.body
         let image = ''
+
+        if(req.file){
+          user.image = req.file.filename
+        }
 
         user.name = name
         user.phone = phone
