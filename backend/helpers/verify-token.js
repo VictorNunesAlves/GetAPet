@@ -16,7 +16,6 @@ const checkToken = async (req, res, next) => {
     else{
         try {
             const verified = jwt.verify(token, 'asiefn8704g0374g7qb4g')
-            console.log('verified: ', verified)
             req.user = verified
             next()
         } catch (error) {

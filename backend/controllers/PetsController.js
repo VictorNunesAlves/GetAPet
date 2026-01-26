@@ -77,7 +77,6 @@ module.exports = class PetsController{
     static async getAdoptions(req, res){
         const token = await getToken(req)
         const user = await getUserByToken(token)
-        console.log(user)
 
         const pets = await Pet.find({ 'adopter._id': user._id }).sort('-createdAt')
 
@@ -102,5 +101,176 @@ module.exports = class PetsController{
 
         res.status(200).json(pet)
     }
+
+    static async removePet(req, res){
+        const token = await getToken(req)
+        const user = await getUserByToken(token)
+
+        const id = req.params.id
+        if(!ObjectiId.isValid(id)){
+            res.status(422).json({message: "Não é um id válido"})
+            return
+        }
+
+        const pet = await Pet.findOne({_id: id})
+        if(!pet){
+            res.status(404).json({message: "Pet Não encontrado"})
+            return
+        }
+
+        //check if pet is from user
+        if(pet.user._id.toString() !== user._id.toString()){
+            res.status(422).json({message: "Não é possivel concluir a solicitação tente novamente mais tarde"})
+            return
+        }
+        try {
+            await Pet.findByIdAndDelete({_id: id})
+            res.status(200).json({message: "removido"})
+            return
+        } catch (error) {
+            res.status(404).json({message: "Erro inesperado"})
+        }
+    }
+
+    static async updatePet(req, res){
+
+        const token = await getToken(req)
+        const user =  await getUserByToken(token)
+
+        const { name, color, weight, age, avaliable } = req.body || {}
+
+        const  images = req.files || []
+
+        const updatedData = {}
+
+        const id = req.params.id
+
+        if(!ObjectiId.isValid(id)){
+            res.status(422).json({message: "Não é um id válido"})
+            return
+        }
+
+        const pet = await Pet.findOne({_id: id})
+        if(!pet){
+            res.status(404).json({message: "Pet Não encontrado"})
+            return
+        }
+
+         if(pet.user._id.toString() !== user._id.toString()){
+            res.status(422).json({message: "Não é possivel concluir a solicitação tente novamente mais tarde"})
+            return
+        }
+        
+        if(!ObjectiId.isValid(id)){
+            res.status(422).json({message: "Não é um id válido"})
+            return
+        }
+
+        if(name !== undefined){
+            updatedData.name = name
+        }
+
+        if(age !== undefined){
+            updatedData.age = age
+        }
+
+        if(color !== undefined){
+            updatedData.color = color
+        }
+
+        if(weight !== undefined){
+            updatedData.weight = weight
+        }
+
+        if(avaliable !== undefined){
+            updatedData.avaliable = avaliable
+        }
+
+        if(images.length > 0){
+            updatedData.images = []
+            images.map((image)=> {
+                updatedData.images.push(image.filename)
+            })
+        }
+
+        await Pet.findByIdAndUpdate(id, updatedData)
+
+        res.status(200).json({message: 'Deu certo'})
+
+    }
+
+    static async schedule(req, res){
+        const id = req.params.id
+
+        if(!ObjectiId.isValid(id)){
+            res.status(422).json({message: "Não é um id válido"})
+            return
+        }
+
+        const pet = await Pet.findOne({_id: id})
+        if(!pet){
+            res.status(404).json({message: "Pet Não encontrado"})
+            return
+        }
+        
+        const token = await getToken(req)
+        const user = await getUserByToken(token)
+
+        if(pet.user._id.equals(user._id)){
+            res.status(422).json({message: "Não é possivel agendar com seu próprio pet "})
+            return
+        }
+
+        //check if user already shceduled a visit
+        if(pet.adopter){
+            if(pet.adopter._id.equals(user._id)){
+                res.status(422).json({message: "Você já agendou uma visita para este pet"})
+                return
+            }
+        }
+
+        pet.adopter = {
+            _id: user._id,
+            name: user.name,
+            phone: user.phone,
+            image: user.image
+        }
+
+        await Pet.findByIdAndUpdate(id, pet)
+        res.status(200).json({message: `Visita agendada com sucesso, entre em contato com ${pet.user.name}, pelo telefone ${pet.user.phone}`, pet})
+    }
+
+    static async concludeAdoption(req, res){
+        const id = req.params.id
+
+        if(!ObjectiId.isValid(id)){
+            res.status(422).json({message: "Não é um id válido"})
+            return
+        }
+
+        const pet = await Pet.findOne({_id: id})
+        if(!pet){
+            res.status(404).json({message: "Pet Não encontrado"})
+            return
+        }
+
+        const token = await getToken(req)
+        const user = await getUserByToken(token)
+
+        if(!pet.user._id.equals(user._id)){
+            res.status(422).json({message: "Não é possivel proseguir com esta solicitação"})
+            return
+        }
+
+        pet.avaliable = false
+        try {
+            await Pet.findByIdAndUpdate(id, pet)
+            res.status(200).json({message: "Ciclo de adoção completo"})
+        } catch (error) {
+            res.status(500).json({message: "Erro inesperado"})
+        }
+        
+    }
+
 
 }

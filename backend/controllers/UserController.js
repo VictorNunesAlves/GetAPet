@@ -96,14 +96,11 @@ module.exports = class UserController{
 
         if(req.headers.authorization){
             const token = await getToken(req)
-            console.log('token: '+ token)
 
             const decod = jwt.verify(token, 'asiefn8704g0374g7qb4g')
-            console.log('decod: '+decod)
 
             currentUser = await User.findById(decod.id)
             currentUser.password = undefined
-            console.log('currentUser: '+ currentUser)
 
         }else{
             currentUser = null
@@ -129,7 +126,6 @@ module.exports = class UserController{
         const token = await getToken(req)
         const user = await getUserByToken(token)
         
-        console.log('user: ', user)
         const { name, email, phone, password, confirmPassword } = req.body
         let image = ''
 
@@ -141,8 +137,6 @@ module.exports = class UserController{
         user.phone = phone
         if(email != undefined){
             const emailExists = await User.findOne({email: email})
-            console.log('emailExist: ', emailExists)
-
 
             if(user.email != email && emailExists){
                 return res.status(422).json({message: 'Por favor, utilize outro email'})
