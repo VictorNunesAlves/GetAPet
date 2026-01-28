@@ -1,10 +1,12 @@
 import Input from '../../form/Input';
 import styles from '../../form/Form.module.css';
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+
+import {Context} from '../../../context/UserContext';
 
 function Register() {
-
+    const {register} = useContext(Context);
     const [user, setUser] = useState({});
 
     function handleChange(e) {
@@ -13,7 +15,7 @@ function Register() {
 
     function handleSubmit(e) {
         e.preventDefault();
-        console.log(user);
+        register(user);
     }
 
     return(
@@ -51,7 +53,7 @@ function Register() {
                 <Input 
                     text="Confirmar senha"
                     type="password"
-                    name="confrimPassword"
+                    name="confirmPassword"
                     placeholder="Confirme sua senha"
                     handleOnChange={handleChange}
                 />

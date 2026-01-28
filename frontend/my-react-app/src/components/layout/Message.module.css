@@ -1,0 +1,53 @@
+.message{ 
+    width: 40%;
+    min-height: 40%;
+    padding: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #000;
+    margin: 1em auto;
+    text-align: center;
+    border-radius: 5px;
+    position: fixed;
+    z-index: 1000; 
+    background-color: rgb(223, 223, 222);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.success{
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.error{
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.closeBtn {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    background: transparent;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 1;
+    color: inherit; 
+    transition: 0.3s;
+    width: 25px;
+    height: 25px;
+}
+
+.closeBtn:hover {
+    border: 1px solid currentColor; 
+    width: 25px;
+    height: 25px;
+    border-radius: 5px;
+}
