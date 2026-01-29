@@ -1,10 +1,50 @@
+import api from '../../utils/api';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import styles from './Home.module.css';
+
 function Home() {
-    return(
+    const [pets, setPets] = useState([]);
+
+    useEffect(() => {
+        api.get('/pets/getAllPets').then((response) => {
+            setPets(response.data.pets);
+        }).catch((err) => {
+            console.log(err);
+        });
+    }, []);
+
+    return (
         <section>
-            <h1>Welcome to Get a Pet</h1>
-            <p>Your journey to find a new furry friend starts here!</p>
+            <div className={styles.pet_home_header}>
+                <h1>Adote um Pet</h1>
+                <p>Veja os detalhes de cada um e conheça o seu futuro amigo</p>
+            </div>
+            <div className={styles.pet_container}>
+                {pets.length > 0 ? (
+                    pets.map((pet) => (
+                        <div key={pet._id} className={styles.pet_card}>
+                            <div 
+                                style={{ backgroundImage: `url(http://localhost:5000/images/pets/${pet.images[0]})` }} 
+                                className={styles.pet_card_image}
+                            ></div>
+                            <h3>{pet.name}</h3>
+                            <p>
+                                <span className="bold">Peso:</span> {pet.weight}kg
+                            </p>
+                            {pet.available || pet.avaliable ? (
+                                <Link to={`/pet/${pet._id}`}>Detalhes</Link>
+                            ) : (
+                                <p className={styles.adopted_text}>Adotado</p>
+                            )}
+                        </div>
+                    ))
+                ) : (
+                    <p>Não há pets cadastrados ou disponíveis para adoção no momento!</p>
+                )}
+            </div>
         </section>
-    )
+    );
 }
 
 export default Home;

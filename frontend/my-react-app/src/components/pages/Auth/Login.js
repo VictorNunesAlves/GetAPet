@@ -8,14 +8,22 @@ import { Context } from '../../../context/UserContext';
 
 function Login() {
 
+    const {login} = useContext(Context);
+    const [user, setUser] = useState({});
+
     function handleChange(e){
-        console.log(e.target.value)
+        setUser({...user, [e.target.name]: e.target.value});
+    }
+
+    function handleSubmit(e){
+        e.preventDefault();
+        login(user);
     }
 
     return(
         <section className={styles.form_container}> 
             <h1>Login</h1>
-            <form>
+            <form onSubmit={handleSubmit}>
                 <Input
                     text="Email"
                     type="email"

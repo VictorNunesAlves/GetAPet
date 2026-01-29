@@ -12,18 +12,14 @@
     font-size: .8em;
 }
 
-.form_control input{
+.form_control select{
     padding: .8em;
     border: 1px solid #777;
     border-radius: 5px;
     font-size: 1em;
 }
 
-.form_control input::placeholder{
-    color: #7b7b7b;
-}
-
-.form_control input:focus{
+.form_control select:focus{
     border-color: #2422bc;
     outline: none;
     box-shadow: 0 0 5px rgba(36, 34, 188, 0.5);

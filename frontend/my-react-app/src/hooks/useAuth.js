@@ -45,7 +45,7 @@ export default function useAuth() {
     async function authUser(data) {
         setAuthenticated(true);
         localStorage.setItem('token', JSON.stringify(data.token));
-        
+        localStorage.setItem('name', JSON.stringify(data.name));
         api.defaults.headers.Authorization = `Bearer ${data.token}`;
         
         navigate('/'); 
@@ -61,5 +61,20 @@ export default function useAuth() {
         navigate('/login'); 
     }
 
-    return { register, authenticated, logout }; 
+    async function login(user) {
+        let msgText = 'Login realizado com sucesso!';   
+        let msgType = 'success';
+        try {
+            const data = await api.post('/users/login', user).then((response) => {
+                return response.data;
+            });
+            await authUser(data);
+        } catch (error) {
+            msgText = error.response.data.message;   
+            msgType = 'error'; 
+        }
+        setFlashMessage(msgText, msgType);
+    }
+
+    return { register, authenticated, logout, login, }; 
 }

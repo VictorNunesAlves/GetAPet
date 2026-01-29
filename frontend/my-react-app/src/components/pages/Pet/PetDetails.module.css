@@ -1,0 +1,105 @@
+.pet_details_container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2em;
+    text-align: center;
+}
+
+.pet_details_header {
+    margin-bottom: 2em;
+}
+
+.gallery_container {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 2em;
+    align-items: flex-start;
+}
+
+.main_image {
+    flex: 3;
+}
+
+.main_image img {
+    width: 100%;
+    max-height: 500px;
+    object-fit: cover;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.thumbnails_container {
+    flex: 1;
+    display: flex;
+    flex-direction: column; 
+    gap: 10px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.thumbnails_container img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: 0.3s;
+    border: 2px solid transparent;
+}
+
+.thumbnails_container img:hover {
+    opacity: 1;
+}
+
+.active_thumb {
+    opacity: 1 !important;
+    border-color: #25b43a !important;
+}
+
+.pet_info {
+    margin-bottom: 2em;
+}
+
+.schedule_btn {
+    background-color: #25b43a;
+    color: #FFF;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    padding: 1em 2em;
+    cursor: pointer;
+    transition: .3s;
+    font-size: 1.1em;
+}
+
+.schedule_btn:hover {
+    background-color: #1e912f;
+}
+
+.auth_msg {
+    margin-top: 2em;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px dashed #ccc;
+}
+
+.auth_msg a {
+    color: #25b43a;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+@media (max-width: 768px) {
+    .gallery_container {
+        flex-direction: column;
+    }
+    .thumbnails_container {
+        flex-direction: row;
+        overflow-x: auto;
+    }
+    .thumbnails_container img {
+        width: 80px;
+    }
+}

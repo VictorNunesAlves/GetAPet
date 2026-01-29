@@ -1,5 +1,5 @@
 .form_container{
-    max-width: 300px;
+    max-width: 600px;
     margin: 0 auto;
     background-color: #FFF;
     border-radius: 25px;
@@ -33,4 +33,20 @@
     color: #2422bc;
     text-decoration: none;
     font-weight: bold;
+}
+
+
+.preview_pet_images {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5em;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.preview_pet_images img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover; 
+    border-radius: 8px;
 }

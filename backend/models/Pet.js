@@ -11,7 +11,7 @@ const Pet = mongoose.model(
             age: {
                 type: Number, required: true
             },
-            weigth: {
+            weight: {
                 type: Number, required: true
             },
             color: {

@@ -1,0 +1,14 @@
+/* RoundedImage.module.css */
+.rounded_image {
+    width: 200px;
+    height: 200px;
+    border-radius: 100%;
+    object-fit: cover;
+    margin-bottom: 1em;
+}
+
+
+.px75 {
+    width: 75px;
+    height: 75px;
+}

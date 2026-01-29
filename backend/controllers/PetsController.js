@@ -5,7 +5,7 @@ const ObjectiId = require('mongoose').Types.ObjectId
 
 module.exports = class PetsController{
     static async create(req, res){
-        const {name, age, weigth, color} = req.body
+        const {name, age, weight, color} = req.body
         const images = req.files
 
         if(!name){
@@ -16,7 +16,7 @@ module.exports = class PetsController{
             res.status(422).json({message:"o Pet precisa de uma idade"})
              return
         }
-        if(!weigth){
+        if(!weight){
             res.status(422).json({message:"o Pet precisa de um peso"})
              return
         }
@@ -36,7 +36,7 @@ module.exports = class PetsController{
             name: name,
             color: color,
             age: age,
-            weigth: weigth,
+            weight: weight,
             avaliable: true,
             user: {
                 _id: user._id,
@@ -53,9 +53,9 @@ module.exports = class PetsController{
 
         try {
             const newPet = await pet.save()
-        res.status(201).json({message: "Deu certo", pet})
+            res.status(201).json({message: "Deu certo", pet})
         } catch (error) {
-            res.status(500).json({message: "error"})
+            res.status(500).json({message: error})
         }
     }
 
@@ -137,7 +137,7 @@ module.exports = class PetsController{
         const token = await getToken(req)
         const user =  await getUserByToken(token)
 
-        const { name, color, weight, age, avaliable } = req.body || {}
+        const { name, color, weight, age, avaliable, adopter } = req.body || {}
 
         const  images = req.files || []
 
@@ -156,10 +156,6 @@ module.exports = class PetsController{
             return
         }
 
-         if(pet.user._id.toString() !== user._id.toString()){
-            res.status(422).json({message: "Não é possivel concluir a solicitação tente novamente mais tarde"})
-            return
-        }
         
         if(!ObjectiId.isValid(id)){
             res.status(422).json({message: "Não é um id válido"})
@@ -193,10 +189,16 @@ module.exports = class PetsController{
             })
         }
 
-        await Pet.findByIdAndUpdate(id, updatedData)
+        if (adopter === null) {
+            updatedData.adopter = null
+        }
 
-        res.status(200).json({message: 'Deu certo'})
-
+        try {
+            await Pet.findByIdAndUpdate(id, { $set: updatedData })
+            res.status(200).json({ message: "Atualizado com sucesso!" })
+        } catch (error) {
+            res.status(500).json({ message: error })
+        }
     }
 
     static async schedule(req, res){
@@ -221,14 +223,13 @@ module.exports = class PetsController{
             return
         }
 
-        //check if user already shceduled a visit
         if(pet.adopter){
             if(pet.adopter._id.equals(user._id)){
                 res.status(422).json({message: "Você já agendou uma visita para este pet"})
                 return
             }
         }
-
+        
         pet.adopter = {
             _id: user._id,
             name: user.name,
