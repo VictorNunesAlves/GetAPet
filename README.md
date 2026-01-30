@@ -1,109 +1,112 @@
-🐾 Get A Pet - Sistema de Adoção de Animais
-O Get A Pet é uma aplicação BackEnd desenvolvida para conectar pessoas interessadas em adotar animais de estimação a protetores ou donos que precisam encontrar um novo lar para seus pets. O sistema conta com gerenciamento completo de usuários, perfis, cadastro de animais e um fluxo de solicitações de adoção.
-Apesar de ter um FrontEnd complexo e bem estruturado ele foi criado por IA somente com o intuito de consumir o BackEnd criado por mim, meu foco atualmente é me desenvolver completamente como dev backend, e posteriormente pretendo aprender tecnologias de frontend como React.
+# 🐾 Get A Pet - Sistema de Adoção de Animais
 
-🚀 Tecnologias Utilizadas
-Frontend
-React.js: Biblioteca principal para construção da interface.
+O **Get A Pet** é uma aplicação **Full Stack** robusta desenvolvida para facilitar o processo de adoção de animais de estimação. A plataforma permite que protetores cadastrem animais disponíveis e que adotantes entrem em contato de forma segura e organizada através de um sistema de agendamento de visitas.
 
-React Router Dom: Gerenciamento de rotas e navegação SPA.
+Este projeto demonstra competências avançadas em desenvolvimento Web, incluindo **autenticação segura**, **manipulação de arquivos no servidor** e **gerenciamento de estados complexos no frontend**.
 
-Axios: Integração com a API REST.
+---
 
-CSS Modules: Estilização escopada para evitar conflitos.
+## 🚀 Tecnologias e Ferramentas
 
-Context API: Gerenciamento global do estado de autenticação.
+### 🎨 Frontend
+- **React.js** — Biblioteca principal para construção de interfaces SPA dinâmicas  
+- **Context API** — Gerenciamento de estado global (autenticação e mensagens do sistema)  
+- **React Router DOM** — Navegação entre páginas (client-side routing)  
+- **Axios** — Cliente HTTP para consumo da API REST  
+- **CSS Modules** — Estilização encapsulada para evitar conflitos de estilo  
 
-Backend
-Node.js & Express: Ambiente de execução e framework para a API.
+### ⚙️ Backend
+- **Node.js & Express** — Servidor e framework para gerenciamento de rotas e middlewares  
+- **MongoDB & Mongoose** — Banco de dados NoSQL e modelagem de documentos  
+- **JWT (JSON Web Token)** — Autenticação baseada em tokens para rotas protegidas  
+- **Bcrypt** — Criptografia de senhas para segurança do banco de dados  
+- **Multer** — Processamento e armazenamento de uploads de imagens físicas  
 
-MongoDB & Mongoose: Banco de dados NoSQL e modelagem de dados.
+---
 
-JWT (JSON Web Token): Autenticação segura de usuários.
+## 🛠️ Funcionalidades Principais
 
-Bcrypt: Criptografia de senhas.
+### 🔐 Autenticação e Perfil
+- **Registro e Login** com validação de campos e segurança de sessão  
+- **Gestão de Perfil** com edição de nome, telefone, e-mail e foto de perfil  
 
-Multer: Middleware para processamento de upload de imagens.
+### 🐶 Gerenciamento de Pets
+- **CRUD Completo** — Cadastro (com múltiplas fotos), edição, listagem e exclusão  
+- **Galeria Dinâmica** — Troca de imagem principal ao clicar nas miniaturas  
+- **Controle de Propriedade** — Identificação automática do dono do pet para liberar ações administrativas  
 
-🛠️ Funcionalidades Principais
-Sistema de Usuários: Registro, Login, Logout e Edição de Perfil com foto.
+### ❤️ Processo de Adoção
+- **Agendamento de Visita** — Solicitação direta de interesse em um pet  
+- **Dashboard de Adoções**
+  - **Aba "Quero Adotar"** — Pets em que o usuário demonstrou interesse, com contato do dono  
+  - **Aba "Solicitações"** — Lista de interessados nos pets do usuário  
+- **Cancelamento e Recusa** — Interrupção do processo por ambas as partes  
+- **Finalização da Adoção** — Marca o pet como adotado, removendo-o da vitrine pública  
 
-Gestão de Pets: Cadastro (com múltiplas fotos), Edição, Listagem e Exclusão (CRUD completo).
+---
 
-Fluxo de Adoção:
+## 🛣️ Estrutura de Endpoints (API)
 
-Usuários podem visualizar pets de terceiros e solicitar uma visita.
+### 👤 Usuários (`/users`)
+- `POST /register` — Cadastro de novos usuários  
+- `POST /login` — Autenticação e geração de token  
+- `GET /checkuser` — Validação de sessão ativa  
+- `PATCH /edit/:id` — Atualização de perfil com upload de imagem  
 
-O dono do pet recebe a solicitação com os dados de contato do interessado.
+### 🐾 Pets (`/pets`)
+- `GET /getAllPets` — Listagem pública de pets disponíveis  
+- `POST /create` — Cadastro de novo pet (requer token)  
+- `GET /getPetsByOwner` — Pets cadastrados pelo usuário  
+- `GET /myAddoptions` — Pets em que o usuário é candidato à adoção  
+- `GET /:id` — Detalhes completos de um pet  
+- `PATCH /update/:id` — Edição de dados ou cancelamento de vínculo  
+- `PATCH /schedule/:id` — Registro de interesse em um pet  
+- `PATCH /conclude/:id` — Conclusão definitiva da adoção  
+- `DELETE /remove/:id` — Exclusão de um pet  
 
-O dono pode Concluir a adoção (finalizando o ciclo) ou Recusar (liberando o pet novamente).
+---
 
-O adotante pode desistir da solicitação a qualquer momento.
+## 📁 Estrutura do Projeto
 
-Dashboard: Painel separado para gerenciar pets próprios e pets em processo de adoção.
-
-🛣️ Estrutura de Rotas (API)
-Usuários (/users)
-POST /register: Cria um novo usuário.
-
-POST /login: Autentica o usuário e retorna o token JWT.
-
-GET /checkuser: Valida o usuário através do token.
-
-PATCH /edit/:id: Atualiza dados do perfil (Nome, E-mail, Telefone, Senha e Imagem).
-
-Pets (/pets)
-POST /create: Cadastra um novo pet (Requer Token).
-
-GET /getAllPets: Rota pública para listar todos os pets disponíveis.
-
-GET /getPetsByOwner: Lista apenas os pets do usuário logado.
-
-GET /myAddoptions: Lista os pets que o usuário solicitou adoção.
-
-GET /:id: Retorna detalhes de um pet específico.
-
-DELETE /remove/:id: Remove um pet do sistema.
-
-PATCH /update/:id: Atualiza informações ou limpa o adotante (Recusar/Desistir).
-
-PATCH /schedule/:id: Registra o interesse de um usuário em um pet.
-
-PATCH /conclude/:id: Finaliza o processo de adoção (Indisponibiliza o pet).
-
-📁 Estrutura do Projeto
-Bash
+```text
 ├── backend/
-│   ├── controllers/    # Lógica de negócio (Pets e Users)
-│   ├── helpers/        # Middleware (Token, Imagens)
-│   ├── models/         # Schemas do MongoDB (Mongoose)
-│   └── routes/         # Definição dos endpoints
+│   ├── controllers/    # Lógica de negócio (Pets / Users)
+│   ├── helpers/        # Middlewares (auth, upload de imagens)
+│   ├── models/         # Schemas do Mongoose
+│   └── routes/         # Rotas do Express
 └── frontend/
-    ├── src/
-    │   ├── components/ # Componentes reutilizáveis (Layout, Form, etc)
-    │   ├── context/    # UserContext e AuthLogic
-    │   ├── hooks/      # Hooks customizados (FlashMessages)
-    │   ├── pages/      # Telas principais da aplicação
-    │   └── utils/      # Configurações do Axios (API)
-🔧 Como executar o projeto
+    └── src/
+        ├── components/ # Componentes reutilizáveis
+        ├── context/    # UserContext e persistência de login
+        ├── hooks/      # Hooks customizados
+        ├── pages/      # Páginas principais da aplicação
+        └── utils/      # Configuração do Axios e API
+```
+
+## 💻 Como Executar o Projeto
+
+Pré-requisitos
+Node.js e NPM instalados.
+
+MongoDB rodando localmente ou via Atlas.
+
+Passos
 Clone o repositório: git clone https://github.com/seu-usuario/get-a-pet.git
 
-Configuração do Backend:
+### No diretório backend:
 
-Entre na pasta backend.
+Execute npm install.
 
-Instale as dependências: npm install.
+Crie um arquivo .env com as chaves: PORT=5000, MONGO_URI e JWT_SECRET.
 
-Crie um arquivo .env com sua string de conexão do MongoDB e uma chave secreta JWT.
+Inicie com npm start.
 
-Inicie o servidor: npm start.
+### No diretório frontend:
 
-Configuração do Frontend:
+Execute npm install.
 
-Entre na pasta frontend.
+Inicie com npm start.
 
-Instale as dependências: npm install.
+Acesse http://localhost:3000.
 
-Inicie a aplicação: npm start.
-
-Acesse http://localhost:3000 no seu navegador.
+Desenvolvido por Victor Hugo Nunes Alves
